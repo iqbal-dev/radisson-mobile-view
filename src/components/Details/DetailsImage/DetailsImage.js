@@ -9,13 +9,13 @@ const DetailsImage = ({ product }) => {
     (data, index) => index + 1 === Number(id)
   );
   console.log(detailsProduct);
-
+  const groupImageLength = detailsProduct[0].groupImage.length;
   React.useEffect(() => {
     setRootImage(
       detailsProduct[0].groupImage?.length &&
         detailsProduct[0]?.groupImage[0]?.image
     );
-  }, [detailsProduct[0].groupImage]);
+  }, [groupImageLength, detailsProduct]);
   const handleRootImage = (e) => {
     setRootImage(e);
   };

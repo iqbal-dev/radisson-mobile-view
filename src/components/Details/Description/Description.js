@@ -1,12 +1,21 @@
 import React, { useState } from "react";
 import { ShoppingCart } from "react-feather";
-import { useParams } from "react-router";
+import { useDispatch } from "react-redux";
+import { useHistory, useParams } from "react-router";
+import { addToCart } from "../../../redux/cart/cartAction";
 const Description = ({ product }) => {
+  const dispatch = useDispatch();
+  const history = useHistory();
   const [color, setColor] = useState(1);
+  const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
   const detailsProduct = product.filter(
     (data, index) => index + 1 === Number(id)
   );
+  const handleClick = (data) => {
+    dispatch(addToCart(data, quantity));
+    history.push("/cart");
+  };
   return (
     <div>
       <h3>{detailsProduct[0]?.name}</h3>
@@ -83,10 +92,13 @@ const Description = ({ product }) => {
                 borderRadius: "5px",
                 marginRight: "10px",
               }}
+              onClick={() =>
+                setQuantity((prevState) => (prevState <= 1 ? 1 : prevState - 1))
+              }
             >
               -
             </button>
-            1{" "}
+            {quantity}
             <button
               style={{
                 border: "none",
@@ -95,6 +107,7 @@ const Description = ({ product }) => {
                 borderRadius: "5px",
                 marginLeft: "10px",
               }}
+              onClick={() => setQuantity((prevState) => prevState + 1)}
             >
               +
             </button>
@@ -102,7 +115,11 @@ const Description = ({ product }) => {
         </div>
       </div>
       <p>{detailsProduct[0].description}</p>
-      <button class="btn btn-primary" style={{ width: "100%", height: "" }}>
+      <button
+        class="btn btn-primary"
+        style={{ width: "100%", height: "" }}
+        onClick={() => handleClick(detailsProduct[0], quantity)}
+      >
         <ShoppingCart className="pt-1" /> ADD TO CART
       </button>
     </div>
